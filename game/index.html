@@ -3,10 +3,23 @@
 <head>
 <title>Aplikasi Simulasi Pesawat Sederhana</title>
 <script src="mygame.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<img src="images/reaper-001.jpg" />
-<img src="images/reaper-002.jpg" />
-<img src="images/reaper-003.jpg" />
+  <div id="title" onclick="mytitle()">
+    <h1>SELAMAT DATANG DI GAME SIMULASI PESAWAT TANPA AWAK!!</h1>
+    <h3>Peringatan!! Game Simulasi Ini Sangat Sederhana Sekali Dan Hanya Sebatas CLI!!</h3>
+    <h5>Tekan CTRL+SHIFT+J untuk CHROME dan Tekan CTRL+SHIFT+J untuk Mozilla</h5>
+  </div>
+  <center>
+    <img src="images/reaper-001.jpg" />
+    <img src="images/reaper-002.jpg" />
+    <img src="images/reaper-003.jpg" />
+  </center>
 </body>
+  <script>
+function mytitle() {
+    document.getElementById("title").style.display = "none";
+}
+</script>
 </html>
