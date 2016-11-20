@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Welcome to My Simple Site
 
 ## About This Site: 
@@ -17,3 +18,6 @@ Website merupakan tugas dari tahap phase-0 Hacktiv8 yang telah dikerjakan sebelu
 Saya Bambang Handoko, ingin belajar mencintai dunia coding & love it like second wife. LOL!!
 
 ![Header](assets/mac-coffee.jpg)
+=======
+# simulation.github.io
+>>>>>>> 7e771497318e39a9f5832c710e9f01ba97d3ece2
