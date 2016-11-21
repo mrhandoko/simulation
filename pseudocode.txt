@@ -1,7 +1,6 @@
 OUTPUT "SIMULASI TERBANG PESAWAT TANPA AWAK *CSSS"
 OUTPUT "Coding Sangat Sederhana Sekali ..LOL.."
 
-
 INIT "uav" object = FUNCTION(name, type, camera, speed, landingGear, elevator, rudder, aileron, spoiler, height, fuel) 
   PROPERTY "name" = ""
   PROPERTY "type" = "";
@@ -90,3 +89,150 @@ ENDFUNCTION
 
 INIT "reaper" OBJECT as NEW "uav" OBJECT
 INIT "point" OBJECT as NEW "point" OBJECT        
+
+RUN activateDrone() of OBJECT "reaper";
+STORE "Wotene" to PROPERTY "name" of "reaper" OBJECT;
+
+RUN namingDrone() of "reaper" OBJECT
+RUN missionBrief() of "reaper" OBJECT
+
+OUTPUT "Sebelum menyalakan mesin check status pesawat Anda";
+
+RUN statusDrone() of "reaper" OBJECT
+RUN engineStart() of "reaper" OBJECT
+RUN 80 PROPERTY "speed" of "reaper" OBJECT
+RUN speedUp() of "reaper" OBJECT
+
+IF PROPERTY "speed" of "reaper" OBJECT = 80 THEN
+  OUTPUT "Pesawat siap lepas landas/Take Off"
+  RUN elevatorUp() of "reaper" OBJECT
+  STORE "NONAKTIF" to PROPERTY "landingGear" of "reaper" OBJECT
+  STORE "200" to PROPERTY "speed" of "reaper" OBJECT
+  STORE "200" to PROPERTY "distance" of "point" OBJECT
+ELSE
+  OUTPUT "Kecepatan belum maksimal, ulangi proses lepas landas";
+ENDIF
+
+RUN statusDrone() of "reaper" OBJECT
+OUTPUT "Pacu kecepatan sampai pada ketinggian maksimal 20.000 feet";
+STORE 2500 PROPERTY "height" of "reaper" OBJECT
+
+WHILE PROPERTY "height" of "reaper" OBJECT <= 20000 DO
+  OUTPUT "Saat ini ketinggian pesawat Anda adalah " + reaper.height + " feet";
+  reaper.height+=2500;
+  
+  IF PROPERTY "height" of "reaper" OBJECT = 20000 THEN
+    STORE "BALANCE" to PROPERTY "distance" of "reaper" OBJECT
+    STORE "fuel" to PROPERTY "distance" of "reaper" OBJECT
+    STORE "300" to PROPERTY "distance" of "point" OBJECT
+  ENDIF
+ENDWHILE
+
+RUN statusDrone() of "reaper" OBJECT
+OUTPUT "Aktifkan kecepatan supersonik pesawat sampai menempuh jarak 5000 Mil dari base A";
+
+FOR 100 < PROPERTY "speed" of "reaper" OBJECT <= 400 
+  reaper.speed+=50;
+  OUTPUT "Kecepatan Anda mencapai ' + reaper.speed + ' Knot";
+ENDFOR
+
+IF PROPERTY "speed" of "reaper" OBJECT >= 350 THEN
+  STORE "5000" to PROPERTY "distance" of "point" OBJECT
+  STORE "80" to PROPERTY "fuel" of "reaper" OBJECT
+  OUTPUT "Anda telah mencapai kecepatan supersonik";
+ENDIF
+
+RUN statusDrone() of "reaper" OBJECT
+
+INIT time = point.distance/reaper.speed
+OUTPUT "Anda telah mencapai jarak 5000 Mil dari base A sekitar " + Math.ceil(time) + " Detik yang lalu";
+IF PROPERTY "distance" of "point" OBJECT = 5000 THEN
+  OUTPUT "Anda telah berada di Checkpoint B, Persiapkan pesawat untuk manuver ke kiri";
+ENDIF
+
+RUN leftManeuver() of "reaper" OBJECT
+RUN statusDrone() of "reaper" OBJECT
+
+OUTPUT "Untuk menghindari radar musuh, lakukan manuver ke kanan";
+
+STORE "70" to PROPERTY "fuel" of "reaper" OBJECT
+RUN rightManeuver() of "reaper" OBJECT
+RUN statusDrone() of "reaper" OBJECT
+
+OUTPUT "Anda telah berada dilokasi Checkpoint X, Kurangi kecepatan Anda dan Aktifkan kamera Anda dan Ambil gambar lokasi X"
+
+RUN balanceState() of "reaper" OBJECT
+STORE "ON" to PROPERTY "camera" of "reaper" OBJECT
+STORE "200" to PROPERTY "speed" of "reaper" OBJECT
+RUN speedDown() of "reaper" OBJECT
+RUN statusDrone() of "reaper" OBJECT
+
+OUTPUT "Ambil Gambar dengan kamera sekarang";
+
+FOR  0 < i < 3
+  i++
+  OUTPUT "Gambar yang diambil : " + targetInitialize[i] + " Checked";
+  IF i = 2 THEN
+    OUTPUT "Misi selesai";
+  ENDIF
+ENDFOR
+
+OUTPUT "Terbang rendah untuk menghindari radar musuh";
+
+WHILE PROPERTY "height" of "reaper" OBJECT >= 5000 DO
+  RUN elevatorDown() of "reaper" OBJECT
+  reaper.height-=2500;
+  OUTPUT "Ketinggian saat ini ' + reaper.height";
+ENDWHILE
+
+STORE "60" to PROPERTY "fuel" of "reaper" OBJECT
+STORE "OFF" to PROPERTY "camera" of "reaper" OBJECT
+STORE "10000" to PROPERTY "distance" of "point" OBJECT
+RUN balanceState() of "reaper" OBJECT
+RUN statusDrone() of "reaper" OBJECT
+
+OUTPUT "Anda sudah dekat ke Base C, persiapkan pesawat untuk posisi mendarat";
+
+FOR 200 >= j >= 0
+  j--
+  IF j = 150 THEN
+    STORE j to PROPERTY "speed" of "reaper" OBJECT
+    STORE "AKTIF" to PROPERTY "landingGear" of "reaper" OBJECT
+    STORE "300" to PROPERTY "height" of "reaper" OBJECT
+    STORE "ON" to PROPERTY "spoiler" of "reaper" OBJECT
+    STORE "40" to PROPERTY "fuel" of "reaper" OBJECT
+    STORE "15000" to PROPERTY "distance" of "point" OBJECT
+    RUN speedDown() of "reaper" OBJECT
+    OUTPUT "Spoiler diaktifkan untuk mengurangi kecepatan";
+    RUN statusDrone() of "reaper" OBJECT
+  ENDIF
+  
+  IF j = 80 THEN
+	STORE j to PROPERTY "speed" of "reaper" OBJECT
+    RUN speedDown() of "reaper" OBJECT
+    STORE "50" to PROPERTY "height" of "reaper" OBJECT
+    OUTPUT "Landing Gear Touch Down, pendaratan sempurna";
+    RUN speedDown() of "reaper" OBJECT
+    RUN statusDrone() of "reaper" OBJECT
+  ENDIF
+  
+  IF j = 30 THEN
+    STORE j to PROPERTY "speed" of "reaper" OBJECT
+    RUN speedDown() of "reaper" OBJECT
+    STORE "0" to PROPERTY "height" of "reaper" OBJECT
+    OUTPUT "Aktifkan full break/rem pesawat";
+    RUN statusDrone() of "reaper" OBJECT
+  ENDIF
+  
+  IF j = 0 THEN
+	STORE j to PROPERTY "speed" of "reaper" OBJECT
+    RUN speedDown() of "reaper" OBJECT
+    OUTPUT "Pesawat telah berhenti total, nonaktifkan mesin pesawat";
+    RUN engineStop() of "reaper" OBJECT
+    RUN statusDrone() of "reaper" OBJECT
+  ENDIF
+ENDFOR
+
+IF PROPERTY "stop" of "reaper" OBJECT = TRUE THEN
+  OUTPUT "Selamat!! Misi Anda sukses. Bersiap untuk misi berikutnya.";
+ENDIF
