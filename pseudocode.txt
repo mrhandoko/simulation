@@ -1,0 +1,92 @@
+OUTPUT "SIMULASI TERBANG PESAWAT TANPA AWAK *CSSS"
+OUTPUT "Coding Sangat Sederhana Sekali ..LOL.."
+
+
+INIT "uav" object = FUNCTION(name, type, camera, speed, landingGear, elevator, rudder, aileron, spoiler, height, fuel) 
+  PROPERTY "name" = ""
+  PROPERTY "type" = "";
+  PROPERTY "camera" = "OFF";
+  PROPERTY "landingGear" = "AKTIF";
+  PROPERTY "speed" = 0;
+  PROPERTY "stop" = TRUE;
+  PROPERTY "elevator" = "BALANCE";
+  PROPERTY "rudder" = "BALANCE";
+  PROPERTY "aileron" = "BALANCE";
+  PROPERTY "spoiler" = "OFF";
+  PROPERTY "height" = 0;
+  PROPERTY "fuel" = 100;
+
+  METHOD "activateDrone" = FUNCTION() 
+    OUTPUT "Anda telah memilih pesawat ' + name + ' dengan tipe '+ type + ' untuk menjalankan misi Anda";
+  
+  METHOD "namingDrone" = FUNCTION()
+    OUTPUT "Anda telah memberi pesawat ini dengan nama " + name;
+
+  METHOD "missionBrief" = FUNCTION()
+    OUTPUT "=================================================================";
+    OUTPUT "Misi terbang Anda adalah terbang dari titik A ke titik B manuver kiri mengarah ke titik C kemudian ambil Foto titik Area X mendarat di base C";
+    OUTPUT "=================================================================";
+  
+  METHOD "engineStart" = FUNCTION()
+    STORE FALSE to PARAMETER "stop"
+    OUTPUT "Mesin diaktifkan";
+
+  METHOD "engineStop" = FUNCTION()
+    STORE TRUE to PARAMETER "stop"
+    OUTPUT "Mesin dinon-aktifkan";
+  
+  METHOD "speedUp" = FUNCTION()
+    OUTPUT "Kecepatan ditambah menjadi " + speed + " Knot";
+
+  METHOD "speedDown" = FUNCTION()
+    OUTPUT "Kecepatan dikurangi menjadi " + speed + " Knot";
+
+  METHOD "elevatorUp" = FUNCTION()
+    STORE "UP" to PARAMETER "elevator"
+
+  METHOD "elevatorDown" = FUNCTION()
+    STORE "DOWN" to PARAMETER "elevator"
+  
+  METHOD "balanceState" = FUNCTION()
+    STORE "BALANCE" to PARAMETER "elevator"
+    STORE "BALANCE" to PARAMETER "rudder"
+    STORE "BALANCE" to PARAMETER "aileron"
+  
+  METHOD "statusDrone" = FUNCTION() 
+    OUTPUT "STATUS KENDALI PESAWAT';
+    OUTPUT "Elevator : " + elevator;
+    OUTPUT "Rudder : " + rudder;
+    OUTPUT "Aileron : " + aileron;
+    OUTPUT "Spoiler : " + spoiler;
+    OUTPUT "Camera : " + camera;
+    OUTPUT "Landing Gear : " + landingGear;
+    OUTPUT "Speed : " + speed;
+    OUTPUT "Bahan Bakar : " + fuel +"%";
+    OUTPUT "Ketinggian " + height;
+    OUTPUT "Jarak dari markas " + point.distance + " Mil";
+ENDFUNCTION
+
+INIT "targetInitialize" ARRAY = ['Gedung', 'Tower', 'Kontrol Darat']
+
+FUNCTION point(distance)
+  RETURN "distance"
+ENDFUNCTION
+
+FUNCTION leftManeuver() 
+  RUN METHOD elevatorUp()
+  STORE "UP" to PROPERTY "aileron" of "uav" OBJECT
+  STORE "LEFT" to PROPERTY "aileron" of "rudder" OBJECT
+  STORE 6500 to PROPERTY "distance" of "point" OBJECT
+  OUTPUT "Pesawat melakukan manuver ke kiri";
+ENDFUNCTION
+
+FUNCTION rightManeuver() 
+  RUN METHOD elevatorUp()
+  STORE "DOWN" to PROPERTY "aileron" of "uav" OBJECT
+  STORE "RIGHT" to PROPERTY "aileron" of "rudder" OBJECT
+  STORE 6500 to PROPERTY "distance" of "point" OBJECT
+  OUTPUT "Pesawat melakukan manuver ke kanan";
+ENDFUNCTION
+
+INIT "reaper" OBJECT as NEW "uav" OBJECT
+INIT "point" OBJECT as NEW "point" OBJECT        
