@@ -1,8 +1,6 @@
 // Judul Program
 console.log('SIMULASI TERBANG PESAWAT TANPA AWAK *CSSS');
-console.log('Coding Sangat Sederhana Sekali ..LOL..');
-
-// Deklarasi Objek pesawat
+console.log('Coding Sangat Sederhana Sekali ..LOL..'
 var uav = function(name, type, camera, speed, landingGear, elevator, rudder, aileron, spoiler, height, fuel) {
   this.name = name;
   this.type = type;
